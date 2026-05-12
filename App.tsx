@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, ScrollView, TextInput, } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TextInput, Button, TouchableOpacity, FlatList} from 'react-native';
 import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
+
 
 export default function App() {
   // State for the text input
@@ -9,6 +10,8 @@ export default function App() {
   const [ description, setDescription ] = React.useState('');
   const [ price, setPrice ] = React.useState('');
 
+  // State for storing dishes
+  const [dishes, setDishes] = React.useState([]);
 
   // State for the dropdown picker
   const [open, setOpen] = React.useState(false);
@@ -19,7 +22,8 @@ export default function App() {
     {label: 'Desserts', value: 'desserts'},
   ]);
   return (
-    // ScrollView allows the content to be scrollable,
+    // ScrollView allows the content to be scrollable
+
     <ScrollView>
     <View style={styles.container}>
       <Text>Chef Cristofels menu</Text>
@@ -59,6 +63,38 @@ export default function App() {
         placeholder="Price of the dish"
       />
 
+      <Button title="Add Dish" onPress={() => {
+        if (dishName.trim() && description.trim() && price.trim() && value) {
+
+          // Adds the new dish to the dishes array
+
+          setDishes([...dishes, { dishName, description, price, category: value }]);
+
+          // Clears the form
+
+          setDishName('');
+          setDescription('');
+          setPrice('');
+          setValue(null);
+        } else {
+          alert('Please fill in all fields');
+        }
+      }} />
+
+      <Text style={{ marginTop: 30, fontSize: 18, fontWeight: 'bold' }}>Menu Items:</Text>
+      <FlatList
+        data={dishes}
+        renderItem={({ item, index }) => (
+          <View style={styles.card}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.dishName}</Text>
+            <Text style={{ color: 'black', marginVertical: 5 }}>{item.description}</Text>
+            <Text style={{ color: 'green', fontWeight: 'bold' }}>Price: R{item.price}</Text>
+            <Text style={{ color: 'blue', fontSize: 12, marginTop: 5 }}>Category: {item.category}</Text>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        scrollEnabled={false}
+      />
     </View>
 
     </ScrollView>
@@ -79,7 +115,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     alignItems: 'center',
-    
+  },
+  card: {
+    borderWidth: 2,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 15,
+    margin: 10,
+    backgroundColor: '#f9f9f9',
+    width: 300,
   },
 });
 
