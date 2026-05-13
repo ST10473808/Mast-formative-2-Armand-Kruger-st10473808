@@ -2,26 +2,36 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, ScrollView, TextInput, Button, TouchableOpacity, FlatList} from 'react-native';
 import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { dishes as initialDishes, Dish } from './data/dishes';
 
+type Item = {
+  label: string;
+  value: string;
+};
 
 export default function App() {
+
   // State for the text input
+
   const [ dishName, setDishName ] = React.useState('');
   const [ description, setDescription ] = React.useState('');
   const [ price, setPrice ] = React.useState('');
 
   // State for storing dishes
-  const [dishes, setDishes] = React.useState([]);
+
+  const [dishes, setDishes] = React.useState<Dish[]>(initialDishes);
 
   // State for the dropdown picker
+
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(null);
-  const [items, setItems] = React.useState([
+  const [value, setValue] = React.useState<Dish['category'] | null>(null);
+  const [items, setItems] = React.useState<Item[]>([
     {label: 'Starters', value: 'starters'},
-    {label: 'Main Course', value: 'main_course'},
+    {label: 'Main', value: 'main'},
     {label: 'Desserts', value: 'desserts'},
   ]);
   return (
+
     // ScrollView allows the content to be scrollable
 
     <ScrollView>
@@ -62,15 +72,24 @@ export default function App() {
         value={price}
         placeholder="Price of the dish"
       />
-
+        <View style={{ marginTop: 20 }}>
       <Button title="Add Dish" onPress={() => {
         if (dishName.trim() && description.trim() && price.trim() && value) {
 
           // Adds the new dish to the dishes array
 
-          setDishes([...dishes, { dishName, description, price, category: value }]);
+          setDishes(prev => [
+            ...prev,
+            {
+              id: String(prev.length + 1),
+              name: dishName,
+              description,
+              price: price.startsWith('R') ? price : `R{price}`,
+              category: value,
+            },
+          ]);
 
-          // Clears the form
+          //Clears the form/user input after adding a dish
 
           setDishName('');
           setDescription('');
@@ -79,22 +98,26 @@ export default function App() {
         } else {
           alert('Please fill in all fields');
         }
-      }} />
+      }} /> 
+    </View>
+
+      <Text style={{ marginTop: 20, fontSize: 20, color: 'gray', fontWeight: 'bold' }}>Total Dishes: {dishes.length}</Text>
 
       <Text style={{ marginTop: 30, fontSize: 18, fontWeight: 'bold' }}>Menu Items:</Text>
       <FlatList
         data={dishes}
         renderItem={({ item, index }) => (
           <View style={styles.card}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.dishName}</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
             <Text style={{ color: 'black', marginVertical: 5 }}>{item.description}</Text>
-            <Text style={{ color: 'green', fontWeight: 'bold' }}>Price: R{item.price}</Text>
+            <Text style={{ color: 'green', fontWeight: 'bold' }}>{item.price}</Text>
             <Text style={{ color: 'blue', fontSize: 12, marginTop: 5 }}>Category: {item.category}</Text>
           </View>
         )}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         scrollEnabled={false}
       />
+
     </View>
 
     </ScrollView>
@@ -115,6 +138,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   card: {
     borderWidth: 2,
@@ -130,3 +154,6 @@ const styles = StyleSheet.create({
 // What i used so far to help me code my app
 //https://hossein-zare.github.io/react-native-dropdown-picker-website/docs
 //https://reactnative.dev/docs
+//https://reactnative.dev/docs/flatlist
+// Fatima Shaik.
+//https://stackoverflow.com/questions/71892161/handling-array-length-in-react
