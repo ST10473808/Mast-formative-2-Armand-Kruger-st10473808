@@ -84,7 +84,7 @@ export default function App() {
               id: String(prev.length + 1),
               name: dishName,
               description,
-              price: price.startsWith('R') ? price : `R{price}`,
+              price: price.startsWith('R') ? price : `R${price}`,
               category: value,
             },
           ]);
