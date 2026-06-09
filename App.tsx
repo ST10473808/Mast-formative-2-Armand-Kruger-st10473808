@@ -1,8 +1,42 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, ScrollView, TextInput, Button, TouchableOpacity, FlatList} from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TextInput, Button, TouchableOpacity, FlatList,ImageBackground} from 'react-native';
 import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { dishes as initialDishes, Dish } from './data/dishes';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dropdownContainer: {
+    width: 200,
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: 'gray',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  card: {
+    borderWidth: 2,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 15,
+    margin: 10,
+    backgroundColor: '#f9f9f9',
+    width: 300,
+  },
+  loginButton: {
+    backgroundColor: '#4169E1',
+    padding: 15,
+    margin: 10,
+    borderRadius: 10,
+    width: 200,
+    alignItems: 'center',
+  },
+});
 
 type Item = {
   label: string;
@@ -16,6 +50,8 @@ export default function App() {
   const [ dishName, setDishName ] = React.useState('');
   const [ description, setDescription ] = React.useState('');
   const [ price, setPrice ] = React.useState('');
+  const [screen, setScreen] = React.useState('login');
+  const [userType, setUserType] = React.useState('');
 
   // State for storing dishes
 
@@ -30,7 +66,45 @@ export default function App() {
     {label: 'Main', value: 'main'},
     {label: 'Desserts', value: 'desserts'},
   ]);
-  return (
+
+  // If the user is on the login screen, show the login options
+
+  if( screen === 'login') {
+  return ( 
+    
+      <View style={styles.container}>
+        <Text style={{ fontSize: 24, marginBottom: 30 }}>
+          Chef Cristofel
+        </Text>
+        
+        
+        <TouchableOpacity
+        style={styles.loginButton}
+        onPress={() => {
+          setUserType('guest');
+          setScreen('guestMenu');
+        }}
+        >
+          
+          <Text>Guest Login</Text>
+          
+          </TouchableOpacity>
+        
+          <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => {
+            setUserType('chef');
+            setScreen('chefMenu');
+          }}
+            >
+              <Text>Chef Login</Text>
+              </TouchableOpacity>
+      </View>
+      );
+    }
+
+    if (screen === 'chefMenu') {
+    return(
 
     // ScrollView allows the content to be scrollable
 
@@ -48,7 +122,7 @@ export default function App() {
         value={dishName}
         placeholder="Dish name"
       />
-
+      
       <DropDownPicker style={styles.dropdownContainer}
         open={open}
         value={value}
@@ -124,32 +198,17 @@ export default function App() {
   );
 }
 
+//Place holder for the guest menu, which is currently just a view.
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dropdownContainer: {
-    width: 200,
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: 'gray',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  card: {
-    borderWidth: 2,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 15,
-    margin: 10,
-    backgroundColor: '#f9f9f9',
-    width: 300,
-  },
-});
+if (screen === 'guestMenu') {
+  return (
+    <View style={styles.container}>
+      <Text style={{ fontSize: 20 }}>Guest Menu View</Text>
+      <Text>PlaceHolder</Text>
+    </View>
+  );
+}
+}
 
 // What i used so far to help me code my app
 //https://hossein-zare.github.io/react-native-dropdown-picker-website/docs
