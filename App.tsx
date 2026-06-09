@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Image, ScrollView, TextInput, Button, Touchable
 import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { dishes as initialDishes, Dish } from './data/dishes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
 
 const styles = StyleSheet.create({
   container: {
@@ -53,9 +55,27 @@ export default function App() {
   const [screen, setScreen] = React.useState('login');
   const [userType, setUserType] = React.useState('');
 
-  // State for storing dishes
+// State for storing dishes
 
-  const [dishes, setDishes] = React.useState<Dish[]>(initialDishes);
+  const [dishes, setDishes] = React.useState<Dish[]>([]);
+
+// Load dishes from AsyncStorage when the app starts
+
+  React.useEffect(() => {
+    const loadDishes = async () => {
+      const storedDishes = await AsyncStorage.getItem('dishes');
+      if (storedDishes) {
+        setDishes(JSON.parse(storedDishes));
+      }
+    };
+    loadDishes();
+  }, []);
+
+  // Save dishes to AsyncStorage whenever they change
+
+  React.useEffect(() => {
+    AsyncStorage.setItem('dishes', JSON.stringify(dishes));
+  }, [dishes]);
 
   // State for the dropdown picker
 
@@ -216,3 +236,4 @@ if (screen === 'guestMenu') {
 //https://reactnative.dev/docs/flatlist
 // Fatima Shaik.
 //https://stackoverflow.com/questions/71892161/handling-array-length-in-react
+//https://medium.com/@mahesh.nikate/storing-data-permanently-in-react-native-using-asyncstorage-2025-91a79b104fdb
