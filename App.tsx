@@ -38,6 +38,14 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: 'center',
   },
+  CategoryButton: {
+    backgroundColor: '#4169E1',
+    padding: 10,
+    margin: 5,
+    borderRadius: 5,
+    width: 100,
+    alignItems: 'center',
+  },
 });
 
 type Item = {
@@ -54,6 +62,7 @@ export default function App() {
   const [ price, setPrice ] = React.useState('');
   const [screen, setScreen] = React.useState('login');
   const [userType, setUserType] = React.useState('');
+  const [selectedCategory, setSelectedCategory] = React.useState('all')
 
 // State for storing dishes
 
@@ -86,6 +95,32 @@ export default function App() {
     {label: 'Main', value: 'main'},
     {label: 'Desserts', value: 'desserts'},
   ]);
+
+  // Function to delete a dish by its id
+
+  const deleteDish = (id: string) => {
+    setDishes(prev => prev.filter(dish => dish.id !== id));
+  }
+
+ // Filter dishes based on the selected category. If 'all' is selected, show all dishes.
+
+const filteredDishes = selectedCategory === 'all' ? dishes : dishes.filter(dish => dish.category === selectedCategory);
+  
+// Function to calculate the average price of a list of dishes, which is used to display the average price in the chef menu.
+
+const calculateAveragePrice = (list: Dish[]) => {
+  if (!list || list.length === 0) return 'R0.00';
+  const total = list.reduce((sum, dish) => {
+    const priceNumber = Number(String(dish.price).replace(/[^0-9.-]+/g, ''));
+    return sum + (isNaN(priceNumber) ? 0 : priceNumber);
+  }, 0);
+  return `R${(total / list.length).toFixed(2)}`;
+};
+
+
+// Calculate the average price of the dishes and store it in a variable to be displayed in the chef menu.
+
+const averagePrice = calculateAveragePrice(filteredDishes);
 
   // If the user is on the login screen, show the login options
 
@@ -197,17 +232,63 @@ export default function App() {
 
       <Text style={{ marginTop: 20, fontSize: 20, color: 'gray', fontWeight: 'bold' }}>Total Dishes: {dishes.length}</Text>
 
-      <Text style={{ marginTop: 30, fontSize: 18, fontWeight: 'bold' }}>Menu Items:</Text>
+      <Text style={{ marginTop: 20, fontSize: 18, fontWeight: 'bold'}}>
+        Categories
+      </Text>
+      <View style={{ flexDirection: 'row', marginTop: 10 }}>
+
+        <TouchableOpacity
+          style={[styles.CategoryButton, selectedCategory === 'all' && { backgroundColor: '#6495ED' }]}
+          onPress={() => setSelectedCategory('all')}
+        >
+          <Text style={{ color: 'white' }}>All</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.CategoryButton, selectedCategory === 'starters' && { backgroundColor: '#6495ED' }]}
+          onPress={() => setSelectedCategory('starters')}
+        >
+          <Text style={{ color: 'white' }}>Starters</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.CategoryButton, selectedCategory === 'main' && { backgroundColor: '#6495ED' }]}
+          onPress={() => setSelectedCategory('main')}
+        >
+          <Text style={{ color: 'white' }}>Main</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.CategoryButton, selectedCategory === 'desserts' && { backgroundColor: '#6495ED' }]}
+          onPress={() => setSelectedCategory('desserts')}
+        >
+          <Text style={{ color: 'white' }}>Desserts</Text>
+        </TouchableOpacity>
+
+      </View>
+
+          <Text style={{ marginTop: 30, fontSize: 18, fontWeight: 'bold' }}>Menu Items:</Text>
+
+          <Text style={{ marginTop: 10, fontSize: 16, color: 'green', fontWeight: 'bold' }}>
+            Average Price ({selectedCategory}): {averagePrice}</Text>
+
       <FlatList
-        data={dishes}
+        data={filteredDishes}
         renderItem={({ item, index }) => (
           <View style={styles.card}>
             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
             <Text style={{ color: 'black', marginVertical: 5 }}>{item.description}</Text>
             <Text style={{ color: 'green', fontWeight: 'bold' }}>{item.price}</Text>
             <Text style={{ color: 'blue', fontSize: 12, marginTop: 5 }}>Category: {item.category}</Text>
+            
+            {/*Delete button for each dish, which calls the deleteDish function with the dish's id when pressed*/}
+
+            <View style={{ marginTop: 10 }}>
+              <Button title="Delete" color="red" onPress={() => deleteDish(item.id)} />
+            </View>
           </View>
         )}
+
         keyExtractor={(item) => item.id}
         scrollEnabled={false}
       />
@@ -237,3 +318,4 @@ if (screen === 'guestMenu') {
 // Fatima Shaik.
 //https://stackoverflow.com/questions/71892161/handling-array-length-in-react
 //https://medium.com/@mahesh.nikate/storing-data-permanently-in-react-native-using-asyncstorage-2025-91a79b104fdb
+//https://reactnative.dev/docs/flatlist?utm
