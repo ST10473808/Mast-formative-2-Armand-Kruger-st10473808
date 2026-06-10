@@ -75,6 +75,11 @@ export default function App() {
       const storedDishes = await AsyncStorage.getItem('dishes');
       if (storedDishes) {
         setDishes(JSON.parse(storedDishes));
+
+        {/* If there are no dishes added the predefined dishes will be used */}
+        <Text>No dishes added yet. Using predefined dishes.</Text>
+      } else {
+        setDishes(initialDishes);
       }
     };
     loadDishes();
@@ -149,12 +154,100 @@ const averagePrice = calculateAveragePrice(filteredDishes);
           style={styles.loginButton}
           onPress={() => {
             setUserType('chef');
-            setScreen('chefMenu');
+            setScreen('mainMenu');
           }}
             >
               <Text>Chef Login</Text>
               </TouchableOpacity>
       </View>
+      );
+    }
+
+
+    if (screen === 'mainMenu') {
+      return (
+
+          <ScrollView>
+
+    <View style={styles.container}>
+
+      <Text>Chef Cristofels menu</Text>
+
+      <Image source={require('./assets/food.jpg')}
+       style={{ width: 200, height: 200 }} />
+      <StatusBar style="auto" />
+   
+      <Text style={{ marginTop: 20, fontSize: 20, color: 'gray', fontWeight: 'bold' }}>Total Dishes: {dishes.length}</Text>
+
+      <Text style={{ marginTop: 20, fontSize: 18, fontWeight: 'bold'}}>
+        Categories:
+      </Text>
+
+      <View style={{ flexDirection: 'row', marginTop: 10 }}>
+
+        <TouchableOpacity
+          style={[styles.CategoryButton, selectedCategory === 'all' && { backgroundColor: '#6495ED' }]}
+          onPress={() => setSelectedCategory('all')}
+        >
+          <Text style={{ color: 'white' }}>All</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.CategoryButton, selectedCategory === 'starters' && { backgroundColor: '#6495ED' }]}
+          onPress={() => setSelectedCategory('starters')}
+        >
+          <Text style={{ color: 'white' }}>Starters</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.CategoryButton, selectedCategory === 'main' && { backgroundColor: '#6495ED' }]}
+          onPress={() => setSelectedCategory('main')}
+        >
+          <Text style={{ color: 'white' }}>Main</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.CategoryButton, selectedCategory === 'desserts' && { backgroundColor: '#6495ED' }]}
+          onPress={() => setSelectedCategory('desserts')}
+        >
+          <Text style={{ color: 'white' }}>Desserts</Text>
+        </TouchableOpacity>
+
+      </View>
+
+          <Text style={{ marginTop: 30, fontSize: 18, fontWeight: 'bold' }}>Menu Items:</Text>
+
+          <Text style={{ marginTop: 10, fontSize: 16, color: 'green', fontWeight: 'bold' }}>
+            Average Price ({selectedCategory}): {averagePrice}</Text>
+
+      <FlatList
+        data={filteredDishes}
+        renderItem={({ item, index }) => (
+          <View style={styles.card}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
+            <Text style={{ color: 'black', marginVertical: 5 }}>{item.description}</Text>
+            <Text style={{ color: 'green', fontWeight: 'bold' }}>{item.price}</Text>
+            <Text style={{ color: 'blue', fontSize: 12, marginTop: 5 }}>Category: {item.category}</Text>
+            
+          </View>
+        )}
+
+        keyExtractor={(item) => item.id}
+        scrollEnabled={false}
+      />
+    
+    </View>
+
+     {/*Button to reset the menu to the initial dishes*/}
+
+        <Button title="Reset Menu" onPress={() => setDishes(initialDishes)} />
+
+      {/*Button to navigate to the chef menu*/}
+
+       <Button title='Chef Menu' onPress={() => setScreen('chefMenu')} />
+
+  </ScrollView>
+   
       );
     }
 
@@ -294,10 +387,20 @@ const averagePrice = calculateAveragePrice(filteredDishes);
       />
 
     </View>
+    
+       {/*Button to reset the menu to the initial dishes, which is only visible on the main menu screen*/}
+
+        <Button title="Reset Menu" onPress={() => setDishes(initialDishes)} />
+
+      {/*Button to navigate to the chef menu*/}
+
+    <Button title='Main Menu' onPress={() => setScreen('mainMenu')} />
 
     </ScrollView>
   );
 }
+
+
 
 //Place holder for the guest menu, which is currently just a view.
 
