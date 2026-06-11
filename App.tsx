@@ -4,15 +4,21 @@ import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { dishes as initialDishes, Dish } from './data/dishes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
 
 const styles = StyleSheet.create({
-  container: {
+  loginContainer: {
     flex: 1,
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#fff8f0',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+ 
   dropdownContainer: {
     width: 200,
     marginTop: 20,
@@ -31,7 +37,7 @@ const styles = StyleSheet.create({
     width: 300,
   },
   loginButton: {
-    backgroundColor: '#4169E1',
+    backgroundColor: '#d35400',
     padding: 15,
     margin: 10,
     borderRadius: 10,
@@ -39,7 +45,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   CategoryButton: {
-    backgroundColor: '#4169E1',
+    backgroundColor: '#27a360',
     padding: 10,
     margin: 5,
     borderRadius: 5,
@@ -50,6 +56,20 @@ const styles = StyleSheet.create({
   ImageBackground: {
     flex: 1,
     justifyContent: 'center',
+  },
+  Image: {
+    width: '100%',
+    height: 200,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  heading: {
+    fontSize: 24,
+    marginBottom: 30,
+    textAlign: 'center',
+    color:'#F8F8F8',
+    fontWeight: 'bold',
   },
 });
 
@@ -114,7 +134,7 @@ export default function App() {
 
 const filteredDishes = selectedCategory === 'all' ? dishes : dishes.filter(dish => dish.category === selectedCategory);
   
-// Function to calculate the average price of a list of dishes, which is used to display the average price in the chef menu.
+// Function to calculate the average price of a list of dishes.
 
 const calculateAveragePrice = (list: Dish[]) => {
   if (!list || list.length === 0) return 'R0.00';
@@ -135,10 +155,10 @@ const averagePrice = calculateAveragePrice(filteredDishes);
   if( screen === 'login') {
   return ( 
 
-      <ImageBackground source={require('./assets/food.jpg')} style={styles.ImageBackground} resizeMode="cover">
+      <ImageBackground source={require('./assets/login_screen.webp')} style={styles.ImageBackground} resizeMode="cover">
 
-      <View style={styles.container}>
-        <Text style={{ fontSize: 24, marginBottom: 30 }}>
+      <View style={styles.loginContainer}>
+        <Text style={styles.heading}>
           Chef Cristofel's menu
         </Text>
 
@@ -176,12 +196,10 @@ const averagePrice = calculateAveragePrice(filteredDishes);
 
           <ScrollView>
 
-    <View style={styles.container}>
-
-      <Text>Chef Cristofels menu</Text>
+    <View style={styles.mainContainer}>
 
       <Image source={require('./assets/food.jpg')}
-       style={{ width: 200, height: 200 }} />
+       style={{ ...styles.Image }} />
       <StatusBar style="auto" />
    
       <Text style={{ marginTop: 20, fontSize: 20, color: 'gray', fontWeight: 'bold' }}>Total Dishes: {dishes.length}</Text>
@@ -269,11 +287,10 @@ const averagePrice = calculateAveragePrice(filteredDishes);
     // ScrollView allows the content to be scrollable
 
     <ScrollView>
-    <View style={styles.container}>
-      <Text>Chef Cristofels menu</Text>
-
+    <View style={styles.mainContainer}>
+    
       <Image source={require('./assets/food.jpg')}
-       style={{ width: 200, height: 200 }} />
+       style={{ ...styles.Image }} />
       <StatusBar style="auto" />
 
       <TextInput
@@ -307,7 +324,11 @@ const averagePrice = calculateAveragePrice(filteredDishes);
         placeholder="Price of the dish"
       />
         <View style={{ marginTop: 20 }}>
-      <Button title="Add Dish" onPress={() => {
+
+
+        <TouchableOpacity style={{ ...styles.CategoryButton }} onPress={() => {
+         
+
         if (dishName.trim() && description.trim() && price.trim() && value) {
 
           // Adds the new dish to the dishes array
@@ -322,7 +343,7 @@ const averagePrice = calculateAveragePrice(filteredDishes);
               category: value,
             },
           ]);
-
+           
           //Clears the form/user input after adding a dish
 
           setDishName('');
@@ -332,7 +353,11 @@ const averagePrice = calculateAveragePrice(filteredDishes);
         } else {
           alert('Please fill in all fields');
         }
-      }} /> 
+         
+
+      }} >
+     <Text style={{ color: 'white' }}>Add Dish</Text>
+          </TouchableOpacity>
     </View>
 
       <Text style={{ marginTop: 20, fontSize: 20, color: 'gray', fontWeight: 'bold' }}>Total Dishes: {dishes.length}</Text>
@@ -417,12 +442,12 @@ if (screen === 'guestMenu') {
     
           <ScrollView>
 
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
 
-      <Text>Chef Cristofels menu</Text>
+      <Text style={styles.heading}>Chef Cristofels menu</Text>
 
       <Image source={require('./assets/food.jpg')}
-       style={{ width: 200, height: 200 }} />
+       style={{ ...styles.Image }} />
       <StatusBar style="auto" />
    
       <Text style={{ marginTop: 20, fontSize: 20, color: 'gray', fontWeight: 'bold' }}>Total Dishes: {dishes.length}</Text>
@@ -468,12 +493,12 @@ if (screen === 'guestMenu') {
 
           <ScrollView>
 
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
 
-      <Text>Chef Cristofels menu</Text>
+      <Text style={styles.heading}>Chef Cristofels menu</Text>
 
       <Image source={require('./assets/food.jpg')}
-       style={{ width: 200, height: 200 }} />
+       style={{ ...styles.Image }} />
       <StatusBar style="auto" />
    
       <Text style={{ marginTop: 20, fontSize: 20, color: 'gray', fontWeight: 'bold' }}>Total Dishes: {dishes.length}</Text>
@@ -546,14 +571,13 @@ if (screen === 'guestMenu') {
    
       );
     }
-
 }
 
 // What i used so far to help me code my app
 //https://hossein-zare.github.io/react-native-dropdown-picker-website/docs
 //https://reactnative.dev/docs
 //https://reactnative.dev/docs/flatlist
-// Fatima Shaik.
+// Fatima Shaik
 //https://stackoverflow.com/questions/71892161/handling-array-length-in-react
 //https://medium.com/@mahesh.nikate/storing-data-permanently-in-react-native-using-asyncstorage-2025-91a79b104fdb
 //https://reactnative.dev/docs/flatlist?utm
