@@ -45,12 +45,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   CategoryButton: {
-    backgroundColor: '#27a360',
+    backgroundColor: '#27AE60',
     padding: 10,
     margin: 5,
     borderRadius: 5,
     width: 100,
     alignItems: 'center',
+  },
+
+  mainButton: {
+    backgroundColor: '#e67e22',
+    padding: 15,
+    margin: 10,
+    borderRadius: 10,
+    width: 200,
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 
   ImageBackground: {
@@ -194,7 +204,7 @@ const averagePrice = calculateAveragePrice(filteredDishes);
     if (screen === 'mainMenu') {
       return (
 
-          <ScrollView>
+      <ScrollView style={{ backgroundColor: '#fff8f0'}}>
 
     <View style={styles.mainContainer}>
 
@@ -255,25 +265,41 @@ const averagePrice = calculateAveragePrice(filteredDishes);
             <Text style={{ color: 'blue', fontSize: 12, marginTop: 5 }}>Category: {item.category}</Text>
             
           </View>
+
         )}
 
         keyExtractor={(item) => item.id}
         scrollEnabled={false}
       />
-    
-    </View>
+      </View>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}> 
 
       {/*Button to reset the menu to the initial dishes*/}
 
-        <Button title="Reset Menu" onPress={() => setDishes(initialDishes)} />
+        <TouchableOpacity
+          style={styles.mainButton} onPress={() => setDishes(initialDishes)}
+        >
+          <Text>Reset Menu</Text>
+        </TouchableOpacity>
 
       {/*Button to navigate to the chef menu*/}
 
-       <Button title='Chef Menu' onPress={() => setScreen('chefMenu')} />
+       <TouchableOpacity
+         style={styles.mainButton} onPress={() => setScreen('chefMenu')}
+       >
+         <Text>Chef Menu</Text>
+       </TouchableOpacity>
+
+       </View>
 
       {/*Button to navigate back to the login screen*/}
 
-       <Button title='Login' onPress={() => setScreen('login')} />
+       <TouchableOpacity
+         style={styles.mainButton} onPress={() => setScreen('login')}
+       >
+         <Text>Login</Text>
+       </TouchableOpacity>
 
   </ScrollView>
    
@@ -286,7 +312,7 @@ const averagePrice = calculateAveragePrice(filteredDishes);
 
     // ScrollView allows the content to be scrollable
 
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: '#fff8f0'}}>
     <View style={styles.mainContainer}>
     
       <Image source={require('./assets/food.jpg')}
@@ -424,14 +450,20 @@ const averagePrice = calculateAveragePrice(filteredDishes);
       />
 
     </View>
+     <View style={{ flexDirection: 'row', justifyContent: 'center' }}> 
     
        {/*Button to reset the menu to the initial dishes*/}
 
-        <Button title="Reset Menu" onPress={() => setDishes(initialDishes)} />
+        <TouchableOpacity style={styles.mainButton} onPress={() => setDishes(initialDishes)}>
+          <Text>Reset Menu</Text>
+        </TouchableOpacity>
 
       {/*Button to navigate to the chef menu*/}
 
-    <Button title='Main Menu' onPress={() => setScreen('mainMenu')} />
+    <TouchableOpacity style={styles.mainButton} onPress={() => setScreen('mainMenu')}>
+      <Text>Main Menu</Text>
+    </TouchableOpacity>
+    </View>
 
     </ScrollView>
   );
@@ -439,8 +471,8 @@ const averagePrice = calculateAveragePrice(filteredDishes);
 
 if (screen === 'guestMenu') {
   return(
-    
-          <ScrollView>
+
+          <ScrollView style={{ backgroundColor: '#fff8f0'}}>
 
     <View style={styles.mainContainer}>
 
@@ -475,13 +507,21 @@ if (screen === 'guestMenu') {
     
     </View>
 
+    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+
       {/*Button to navigate to the filter menu*/}
 
-       <Button title='Filter Menu' onPress={() => setScreen('filterMenu')} />
+       <TouchableOpacity style={styles.mainButton} onPress={() => setScreen('filterMenu')}>
+         <Text>Filter Menu</Text>
+       </TouchableOpacity>
 
         {/*Button to navigate back to the login screen*/}
 
-        <Button title='Login' onPress={() => setScreen('login')} />
+        <TouchableOpacity style={styles.mainButton} onPress={() => setScreen('login')}>
+          <Text>Login</Text>
+        </TouchableOpacity>
+
+    </View>
 
   </ScrollView>
   
@@ -491,7 +531,7 @@ if (screen === 'guestMenu') {
    if (screen === 'filterMenu') {
       return (
 
-          <ScrollView>
+         <ScrollView style={{ backgroundColor: '#fff8f0'}}>
 
     <View style={styles.mainContainer}>
 
@@ -553,19 +593,22 @@ if (screen === 'guestMenu') {
             <Text style={{ color: 'green', fontWeight: 'bold' }}>{item.price}</Text>
             <Text style={{ color: 'blue', fontSize: 12, marginTop: 5 }}>Category: {item.category}</Text>
             
-          </View>
+            </View>
+
         )}
 
         keyExtractor={(item) => item.id}
         scrollEnabled={false}
       />
-    
+       
     </View>
      
 
       {/*Button to navigate to the guest menu*/}
 
-       <Button title='Main Menu' onPress={() => setScreen('guestMenu')} />
+       <TouchableOpacity style={styles.mainButton} onPress={() => setScreen('guestMenu')}>
+         <Text>Main Menu</Text>
+       </TouchableOpacity>
 
   </ScrollView>
    
