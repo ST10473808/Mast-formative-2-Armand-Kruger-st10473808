@@ -26,6 +26,8 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     alignItems: 'center',
     alignSelf: 'center',
+    backgroundColor: 'fff8f0',
+
   },
   card: {
     borderWidth: 2,
@@ -262,11 +264,13 @@ const averagePrice = calculateAveragePrice(filteredDishes);
             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
             <Text style={{ color: 'black', marginVertical: 5 }}>{item.description}</Text>
             <Text style={{ color: 'green', fontWeight: 'bold' }}>{item.price}</Text>
-            <Text style={{ color: 'blue', fontSize: 12, marginTop: 5 }}>Category: {item.category}</Text>
-            
+            <Text style={{ color: 'blue', fontSize: 12, marginTop: 5}}>Category: {item.category}</Text>
+
           </View>
 
         )}
+
+        // this is used to extract a unique key for each item in the list, which helps React Native optimize rendering.
 
         keyExtractor={(item) => item.id}
         scrollEnabled={false}
@@ -320,12 +324,12 @@ const averagePrice = calculateAveragePrice(filteredDishes);
       <StatusBar style="auto" />
 
       <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: 200, marginTop: 20 }}
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: 200, marginTop: 10 }}
         onChangeText={text => setDishName(text)}
         value={dishName}
         placeholder="Dish name"
       />
-      
+
       <DropDownPicker style={styles.dropdownContainer}
         open={open}
         value={value}
@@ -334,6 +338,7 @@ const averagePrice = calculateAveragePrice(filteredDishes);
         setValue={setValue}
         setItems={setItems}
         listMode='SCROLLVIEW'
+        dropDownContainerStyle={{ backgroundColor: '#fff8f0', borderColor: 'gray', width: 200, alignSelf: 'center' }}
       />
 
        <TextInput
@@ -476,8 +481,6 @@ if (screen === 'guestMenu') {
 
     <View style={styles.mainContainer}>
 
-      <Text style={styles.heading}>Chef Cristofels menu</Text>
-
       <Image source={require('./assets/food.jpg')}
        style={{ ...styles.Image }} />
       <StatusBar style="auto" />
@@ -534,8 +537,6 @@ if (screen === 'guestMenu') {
          <ScrollView style={{ backgroundColor: '#fff8f0'}}>
 
     <View style={styles.mainContainer}>
-
-      <Text style={styles.heading}>Chef Cristofels menu</Text>
 
       <Image source={require('./assets/food.jpg')}
        style={{ ...styles.Image }} />
@@ -596,6 +597,8 @@ if (screen === 'guestMenu') {
             </View>
 
         )}
+
+        // this is used to extract a unique key for each item in the list, which helps React Native optimize rendering.
 
         keyExtractor={(item) => item.id}
         scrollEnabled={false}
